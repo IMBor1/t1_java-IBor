@@ -16,7 +16,8 @@ import java.util.List;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-
+    @Autowired
+private DataGenerator dataGenerator;
     @Autowired
     private AccountRepository accountRepository;
 
@@ -31,16 +32,15 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<Account> accounts = DataGenerator.generateAccounts(10);
-        accountRepository.saveAll(accounts);
+        List<Account> accounts = dataGenerator.generateAccounts(10);
 
-        List<Transaction> transactions = DataGenerator.generateTransactions(accounts, 20);
+        List<Transaction> transactions = dataGenerator.generateTransactions(accounts, 20);
         transactionRepository.saveAll(transactions);
 
-        List<DataSourceErrorLog> errorLogs = DataGenerator.generateErrorLogs(5);
+        List<DataSourceErrorLog> errorLogs = dataGenerator.generateErrorLogs(5);
         errorLogRepository.saveAll(errorLogs);
 
-        List<TimeLimitExceedLog> timeLimitLogs = DataGenerator.generateTimeLimitLogs(5);
+        List<TimeLimitExceedLog> timeLimitLogs = dataGenerator.generateTimeLimitLogs(5);
         timeLimitLogRepository.saveAll(timeLimitLogs);
 
         System.out.println("Данные успешно сохранены в базу данных!");

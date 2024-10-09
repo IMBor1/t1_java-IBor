@@ -1,56 +1,68 @@
 package ru.t1.java.demo.util;
 
+import org.springframework.stereotype.Component;
 import ru.t1.java.demo.model.*;
+import ru.t1.java.demo.repository.AccountRepository;
+import ru.t1.java.demo.repository.DataSourceErrorLogRepository;
+import ru.t1.java.demo.repository.TimeLimitExceedLogRepository;
+import ru.t1.java.demo.repository.TransactionRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+@Component
 public class DataGenerator {
     private static final Random random = new Random();
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final DataSourceErrorLogRepository dataSourceErrorLogRepository;
+    private final TimeLimitExceedLogRepository timeLimitExceedLogRepository;
 
-    public static List<Account> generateAccounts(int count) {
-        List<Account> accounts = new ArrayList<>();
+    public DataGenerator(AccountRepository accountRepository, TransactionRepository transactionRepository, DataSourceErrorLogRepository dataSourceErrorLogRepository, TimeLimitExceedLogRepository timeLimitExceedLogRepository) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+        this.dataSourceErrorLogRepository = dataSourceErrorLogRepository;
+        this.timeLimitExceedLogRepository = timeLimitExceedLogRepository;
+    }
+    public List<Account> generateAccounts(int count) {
+
         for (int i = 0; i < count; i++) {
             Account account = new Account();
             account.setClientId((long) (random.nextInt(1000) + 1));
             account.setAccountType(AccountType.values()[random.nextInt(AccountType.values().length)]);
             account.setBalance(random.nextDouble() * 1000000);
-            accounts.add(account);
+            accountRepository.save(account);
         }
-        return accounts;
+        return accountRepository.findAll();
     }
-    public static List<Transaction> generateTransactions(List<Account> accounts, int count) {
-        List<Transaction> transactions = new ArrayList<>();
+    public List<Transaction> generateTransactions(List<Account> accounts, int count) {
         for (int i = 0; i < count; i++) {
             Transaction transaction = new Transaction();
             transaction.setAccountId(accounts.get(random.nextInt(accounts.size())).getClientId());
             transaction.setAmount(BigDecimal.valueOf(random.nextDouble() * 1000000).setScale(2, BigDecimal.ROUND_HALF_UP));
             transaction.setClientId(accounts.get(random.nextInt(accounts.size())).getClientId());
-            transactions.add(transaction);
+            transactionRepository.save(transaction);
         }
-        return transactions;
+            return transactionRepository.findAll();
     }
-    public static List<DataSourceErrorLog> generateErrorLogs(int count) {
-        List<DataSourceErrorLog> errorLogs = new ArrayList<>();
+    public List<DataSourceErrorLog> generateErrorLogs(int count) {
         for (int i = 0; i < count; i++) {
             DataSourceErrorLog log = new DataSourceErrorLog();
             log.setStackTrace("Sample stack trace for error " + (i + 1));
             log.setMessage("Sample error message " + (i + 1));
             log.setMethodSignature("com.example.Method" + (i + 1) + "()");
-            errorLogs.add(log);
+            dataSourceErrorLogRepository.save(log);
         }
-        return errorLogs;
+        return dataSourceErrorLogRepository.findAll();
     }
-    public static List<TimeLimitExceedLog> generateTimeLimitLogs(int count) {
-        List<TimeLimitExceedLog> timeLimitLogs = new ArrayList<>();
+    public
+    List<TimeLimitExceedLog> generateTimeLimitLogs(int count) {
         for (int i = 0; i < count; i++) {
             TimeLimitExceedLog log = new TimeLimitExceedLog();
             log.setMethodSignature("com.example.Method" + (i + 1) + "()");
             log.setExecutionTime(random.nextInt(2000));
-            timeLimitLogs.add(log);
+            timeLimitExceedLogRepository.save(log);
         }
-        return timeLimitLogs;
+        return timeLimitExceedLogRepository.findAll();
     }
 }
