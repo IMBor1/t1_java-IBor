@@ -8,9 +8,12 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import ru.t1.java.demo.model.Account;
 import ru.t1.java.demo.model.Client;
 import ru.t1.java.demo.model.dto.ClientDto;
+import ru.t1.java.demo.service.AccountService;
 import ru.t1.java.demo.service.ClientService;
+import ru.t1.java.demo.service.TransactionService;
 import ru.t1.java.demo.util.ClientMapper;
 
 import java.util.List;
@@ -46,4 +49,5 @@ public class KafkaClientConsumer {
 
         log.debug("Client consumer: записи обработаны");
     }
+
 }

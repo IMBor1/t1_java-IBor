@@ -2,10 +2,7 @@ package ru.t1.java.demo.util;
 
 import org.springframework.stereotype.Component;
 import ru.t1.java.demo.model.*;
-import ru.t1.java.demo.repository.AccountRepository;
-import ru.t1.java.demo.repository.DataSourceErrorLogRepository;
-import ru.t1.java.demo.repository.TimeLimitExceedLogRepository;
-import ru.t1.java.demo.repository.TransactionRepository;
+import ru.t1.java.demo.repository.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,12 +14,16 @@ public class DataGenerator {
     private final TransactionRepository transactionRepository;
     private final DataSourceErrorLogRepository dataSourceErrorLogRepository;
     private final TimeLimitExceedLogRepository timeLimitExceedLogRepository;
+    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
-    public DataGenerator(AccountRepository accountRepository, TransactionRepository transactionRepository, DataSourceErrorLogRepository dataSourceErrorLogRepository, TimeLimitExceedLogRepository timeLimitExceedLogRepository) {
+    public DataGenerator(AccountRepository accountRepository, TransactionRepository transactionRepository, DataSourceErrorLogRepository dataSourceErrorLogRepository, TimeLimitExceedLogRepository timeLimitExceedLogRepository, ClientRepository clientRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.dataSourceErrorLogRepository = dataSourceErrorLogRepository;
         this.timeLimitExceedLogRepository = timeLimitExceedLogRepository;
+        this.clientRepository = clientRepository;
+        this.userRepository = userRepository;
     }
     public List<Account> generateAccounts(int count) {
 
@@ -54,6 +55,26 @@ public class DataGenerator {
             dataSourceErrorLogRepository.save(log);
         }
         return dataSourceErrorLogRepository.findAll();
+    }
+    public List<Client> generateClients(int count) {
+        for (int i = 0; i < count; i++) {
+            Client client = new Client();
+            client.setFirstName("firstName " + (i + 1));
+            client.setLastName("lastName " + (i + 1));
+            client.setMiddleName("middleName " + (i + 1));
+            clientRepository.save(client);
+        }
+        return clientRepository.findAll();
+    }
+    public List<User> generateUsers(int count) {
+        for (int i = 0; i < count; i++) {
+            User user = new User();
+            user.setLogin("Login " + (i + 1));
+            user.setEmail("email " + (i + 1));
+            user.setPassword("Password " + (i + 1));
+            userRepository.save(user);
+        }
+        return userRepository.findAll();
     }
     public
     List<TimeLimitExceedLog> generateTimeLimitLogs(int count) {

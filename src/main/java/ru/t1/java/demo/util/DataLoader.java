@@ -3,10 +3,7 @@ package ru.t1.java.demo.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.t1.java.demo.model.Account;
-import ru.t1.java.demo.model.DataSourceErrorLog;
-import ru.t1.java.demo.model.TimeLimitExceedLog;
-import ru.t1.java.demo.model.Transaction;
+import ru.t1.java.demo.model.*;
 import ru.t1.java.demo.repository.AccountRepository;
 import ru.t1.java.demo.repository.DataSourceErrorLogRepository;
 import ru.t1.java.demo.repository.TimeLimitExceedLogRepository;
@@ -17,7 +14,7 @@ import java.util.List;
 @Component
 public class DataLoader implements CommandLineRunner {
     @Autowired
-private DataGenerator dataGenerator;
+    private DataGenerator dataGenerator;
     @Autowired
     private AccountRepository accountRepository;
 
@@ -33,16 +30,10 @@ private DataGenerator dataGenerator;
     @Override
     public void run(String... args) throws Exception {
         List<Account> accounts = dataGenerator.generateAccounts(10);
-
         List<Transaction> transactions = dataGenerator.generateTransactions(accounts, 20);
-        transactionRepository.saveAll(transactions);
-
         List<DataSourceErrorLog> errorLogs = dataGenerator.generateErrorLogs(5);
-        errorLogRepository.saveAll(errorLogs);
-
         List<TimeLimitExceedLog> timeLimitLogs = dataGenerator.generateTimeLimitLogs(5);
-        timeLimitLogRepository.saveAll(timeLimitLogs);
-
-        System.out.println("Данные успешно сохранены в базу данных!");
+        List<Client> clients = dataGenerator.generateClients(10);
+        List<User> users = dataGenerator.generateUsers(10);
     }
 }
