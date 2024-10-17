@@ -54,3 +54,6 @@ track:
   db:
     enabled: false
   time-limit-exceed: 1000
+time:
+  limit:
+    ms: 2000
