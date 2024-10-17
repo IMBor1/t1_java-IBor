@@ -6,12 +6,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.t1.java.demo.model.DataSourceErrorLog;
 import ru.t1.java.demo.repository.DataSourceErrorLogRepository;
 
 @Aspect
 @Component
-public class ExceptionLoggingAspect {
+public class DataSourceErrorLog {
 
     @Autowired
     private DataSourceErrorLogRepository errorLogRepository;
@@ -20,7 +19,7 @@ public class ExceptionLoggingAspect {
     public void logException(JoinPoint joinPoint,Exception ex) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 
-        DataSourceErrorLog errorLog = new DataSourceErrorLog();
+        ru.t1.java.demo.model.DataSourceErrorLog errorLog = new ru.t1.java.demo.model.DataSourceErrorLog();
         errorLog.setStackTrace(ex.getStackTrace().toString());
         errorLog.setMessage(ex.getMessage());
         errorLog.setMethodSignature(methodSignature.toShortString());
